@@ -36,35 +36,38 @@ class solution:
         for x in range(len(libraries)):
             #list of tmp score
             maxScore = 0
-            #calcuate how many days a library needs to ship out all its books
-            numOfShippingDays = libraries[x][0]/libraries[x][2]
             #calculate how many books it can ship
             booksShip = (scanningDay - libraries[x][1] - 1)*libraries[x][2]
             #rank book by its score 
-            book_with_score = []
-            tmp_score = scores.copy()
-            for books in librarie_books[x]:
-                for book in books:
-                    book_with_score.append(tmp_score[book])
-                    tmp_score[book] = 0
-                sorted(book_with_score,reverse=True)
-                #calculate score
-                sumScore = sum(book_with_score[0:(booksShip-1)])
-                tmp_scores.append(tmp_score.copy())
-                #compare with maxscore
+            if(bookShip > 0):
+                book_with_score = []
+                tmp_score = scores.copy()
+                for books in librarie_books[x]:
+                    for book in books:
+                        book_with_score.append(tmp_score[book])
+                        tmp_score[book] = 0
+                    sorted(book_with_score,reverse=True)
+                    #calculate score
+                    sumScore = sum(book_with_score[0:(booksShip-1)])
+                    tmp_scores.append(tmp_score.copy())
+                    #compare with maxscore
+            else:
+                tmp_score.append(score.copy())
                 if(sumScore > maxScore):
             #if is new maxscore, currLib = this library, books = select books
                     maxScore = sumScore
                     selectedLib = x
 
         #return selected library as an int and selected books as list and new socre as list, new scanning day
-        return selectedLib, [],tmp_scores[selectedLib],scanningDay - libraries[selectedLib][1]
+        return selectedLib, [],tmp_scores[selectedLib],scanningDay-libraries[selectedLib][1]
 
     #output which books shipped from which library adn the order of libraries signed up
     def findShippingOrder(self,fileName):  
         numberOfLibrary,totalBooks,libraries,librarie_books,scores,scanningDay = self.importFile(fileName)
         shippingPlan = []
         while scanningDay > 1:
-            scores,scanningDay,selectedLibrary,selectBooks = self.calculateScore(numberOfLibrary,totalBooks,libraries,librarie_books,scores,scanningDay)
+           selectedLibrary,selectBooks scores,scanningDay = self.calculateScore(numberOfLibrary,totalBooks,libraries,librarie_books,scores,scanningDay)
             shippingPlan.append([selectedLibrary,selectBooks])
         return shippingPlan
+driver = solution()
+driver.findShippingOrder(a.example.txt)
