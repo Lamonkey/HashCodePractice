@@ -62,4 +62,9 @@ class solution:
 
     #output which books shipped from which library adn the order of libraries signed up
     def findShippingOrder(self,fileName):  
-        return None
+        numberOfLibrary,totalBooks,libraries,librarie_books,scores,scanningDay = self.importFile(fileName)
+        shippingPlan = []
+        while scanningDay > 1:
+            scores,scanningDay,selectedLibrary,selectBooks = self.calculateScore(numberOfLibrary,totalBooks,libraries,librarie_books,scores,scanningDay)
+            shippingPlan.append([selectedLibrary,selectBooks])
+        return shippingPlan
