@@ -19,12 +19,13 @@ class solution:
                         scores = line.split()
                     elif(line_index%2 == 0):
                         numberOfbooks,signUpDay,shiprate = line.split()
-                        libraries.append([numberOfbooks,signUpDay,shiprate])
+                        libraries.append([int(numberOfbooks),int(signUpDay),int(shiprate)])
                     else:
-                        librarie_books.append(line.split())
+                        tmp = [int(x) for x in line.split()]
+                        librarie_books.append(tmp)
                 line_index = line_index + 1
-
-        return numberOfLibrary,totalBooks,libraries,librarie_books,scores,scanningDay
+        scores_int = [int(x) for x in scores]
+        return numberOfLibrary,int(totalBooks),libraries,librarie_books,scores_int,int(scanningDay)
 
     
     #output new scores, new scanningDay, selected library, selected books
@@ -32,42 +33,50 @@ class solution:
     def calculateScore(self,numberOfLibrary,totalBooks,libraries,librarie_books,scores,scanningDay):
         selectedLib = 0
         tmp_scores = []
+        maxScore = 0
         #iterate every library
         for x in range(len(libraries)):
             #list of tmp score
-            maxScore = 0
             #calculate how many books it can ship
             booksShip = (scanningDay - libraries[x][1] - 1)*libraries[x][2]
             #rank book by its score 
-            if(bookShip > 0):
+            if(booksShip > 0):
                 book_with_score = []
                 tmp_score = scores.copy()
-                for books in librarie_books[x]:
-                    for book in books:
-                        book_with_score.append(tmp_score[book])
-                        tmp_score[book] = 0
-                    sorted(book_with_score,reverse=True)
-                    #calculate score
-                    sumScore = sum(book_with_score[0:(booksShip-1)])
-                    tmp_scores.append(tmp_score.copy())
-                    #compare with maxscore
-            else:
-                tmp_score.append(score.copy())
+                for book in librarie_books[x]:
+                    book_with_score.append(tmp_score[book])
+                    tmp_score[book] = 0
+                book_with_score = sorted(book_with_score,reverse=True)
+                #calculate score
+                if(booksShip >= len(book_with_score)):
+                    sumScore = sum(book_with_score)
+                else:
+                    sumScore = sum(book_with_score[0:(booksShip)])
+                tmp_scores.append(tmp_score.copy())
+                #compare with maxscore
                 if(sumScore > maxScore):
-            #if is new maxscore, currLib = this library, books = select books
+                #if is new maxscore, currLib = this library, books = select books
                     maxScore = sumScore
                     selectedLib = x
-
+            else:
+                tmp_scores.append(scores.copy())
+                sumScore = 0
+        if (maxScore == 0):
+            scanningDay = 0
+        else:
+            scanningDay = scanningDay-libraries[selectedLib][1]
         #return selected library as an int and selected books as list and new socre as list, new scanning day
-        return selectedLib, [],tmp_scores[selectedLib],scanningDay-libraries[selectedLib][1]
+        return selectedLib, [maxScore],tmp_scores[selectedLib],scanningDay
 
     #output which books shipped from which library adn the order of libraries signed up
     def findShippingOrder(self,fileName):  
         numberOfLibrary,totalBooks,libraries,librarie_books,scores,scanningDay = self.importFile(fileName)
         shippingPlan = []
         while scanningDay > 1:
-           selectedLibrary,selectBooks scores,scanningDay = self.calculateScore(numberOfLibrary,totalBooks,libraries,librarie_books,scores,scanningDay)
-            shippingPlan.append([selectedLibrary,selectBooks])
+            selectedLibrary,selectBooks,scores,scanningDay = self.calculateScore(numberOfLibrary,totalBooks,libraries,librarie_books,scores,scanningDay)
+            if(len(selectBooks)>0):
+                shippingPlan.append([selectedLibrary,selectBooks])
         return shippingPlan
+
 driver = solution()
-driver.findShippingOrder(a.example.txt)
+print(driver.findShippingOrder("b_read_on.txt"))
