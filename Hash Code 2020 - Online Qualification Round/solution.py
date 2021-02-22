@@ -42,4 +42,5 @@ class solution:
 
     #output which books shipped from which library adn the order of libraries signed up
     def findShippingOrder(self,fileName):  
+        numberOfLibrary,totalBooks,libraries,librarie_books,scores,scanningDay = importFile(fileName)
         return None
