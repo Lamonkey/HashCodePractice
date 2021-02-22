@@ -1,5 +1,5 @@
 class solution:
-    #read file and return the following variable
+    #edited read file and return the following variable
     def importFile(self,fileName):
         numberOfLibrary = 0 #total number of library
         totalBooks = 0 #total number of books
@@ -31,7 +31,6 @@ class solution:
     
     #output new scores, new scanningDay, selected library, selected books
     def calculateScore(self,librarys,scores,scanningDay,signUpDays,shipRates):
-
         return None
 
     def findShippingOrder(self,fileName):
