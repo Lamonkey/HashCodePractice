@@ -1,5 +1,5 @@
 class solution:
-    #read file and return the following variable
+    #edited read file and return the following variable
     def importFile(self,fileName):
         librarys = [] #store book in each librarys
         scores = [] #score of all book
@@ -9,8 +9,8 @@ class solution:
     
     #output new scores, new scanningDay, selected library, selected books
     def calculateScore(self,librarys,scores,scanningDay,signUpDays,shipRates):
-
         return None
 
     def findShippingOrder(self,fileName):
         #output which books shipped from which library adn the order of libraries signed up
+        return None
