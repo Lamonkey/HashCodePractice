@@ -30,24 +30,35 @@ class solution:
     #output new scores, new scanningDay, selected library, selected books
     #libraries = [number of books, signup process, ship rate]
     def calculateScore(self,numberOfLibrary,totalBooks,libraries,librarie_books,scores,scanningDay):
-        curScore = 0
-        maxScore = 0
+        selectedLib = 0
+        tmp_scores = []
         #iterate every library
         for x in range(len(libraries)):
-            #calcuate how many day it can ship book
-            #calculate how man book it can ship
-            #rank book by its score
-            #calculate score
-            #compare with maxscore
+            #list of tmp score
+            maxScore = 0
+            #calcuate how many days a library needs to ship out all its books
+            numOfShippingDays = libraries[x][0]/libraries[x][2]
+            #calculate how many books it can ship
+            booksShip = (scanningDay - libraries[x][1] - 1)*libraries[x][2]
+            #rank book by its score 
+            book_with_score = []
+            tmp_score = scores.copy()
+            for books in librarie_books[x]:
+                for book in books:
+                    book_with_score.append(tmp_score[book])
+                    tmp_score[book] = 0
+                sorted(book_with_score,reverse=True)
+                #calculate score
+                sumScore = sum(book_with_score[0:(booksShip-1)])
+                tmp_scores.append(tmp_score.copy())
+                #compare with maxscore
+                if(sumScore > maxScore):
             #if is new maxscore, currLib = this library, books = select books
-            curScore = libraries[x].score
-            maxScore = curScore
-            if(libraries[x].score > libraries[x+1].score):
-                break
-            else:
-                maxScore = libarys[x+1].score
-        #return selected library as an int and selected books as list
-        return None
+                    maxScore = sumScore
+                    selectedLib = x
+
+        #return selected library as an int and selected books as list and new socre as list, new scanning day
+        return selectedLib, [],tmp_scores[selectedLib],scanningDay - libraries[selectedLib][1]
 
     #output which books shipped from which library adn the order of libraries signed up
     def findShippingOrder(self,fileName):  
